@@ -42,7 +42,7 @@
               <h3 class="panel-title"><strong>Amtrak Schedule</strong></h3>
             </div>
             <div class="panel-body">
-              <table class="table table-hover" id='employee-table'>
+              <table class="table table-hover" id='train-table'>
                 <thead>
                   <tr>
                     <th>Train Name</th>
@@ -116,7 +116,7 @@ var config = {
     authDomain: "train-scheduler-e1b0b.firebaseapp.com",
     databaseURL: "https://train-scheduler-e1b0b.firebaseio.com",
     projectId: "train-scheduler-e1b0b",
-    storageBucket: "",
+    storageBucket: "train-scheduler-e1b0b.appspot.com",
     messagingSenderId: "700299089423"
 };
 
@@ -170,33 +170,33 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   // Store everything into a variable.
   var trainName = childSnapshot.val().name;
   var trainDestination = childSnapshot.val().destination;
-  var first = childSnapshot.val().start;
-  var empRate = childSnapshot.val().rate;
+  var firstTrainDepartTime = childSnapshot.val().firstDepart;
+  var trainFrequency = childSnapshot.val().frequency;
 
   // Employee Info
   console.log(trainName);
   console.log(trainDestination);
-  console.log(empStart);
-  console.log(empRate);
+  console.log(firstTrainDepartTime);
+  console.log(trainFrequency);
 
   // Prettify the employee start
-  var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
+  var nextTrainArrive = moment.unix(firstTrainDepartTime).format("MM/DD/YY");   //fix this
 
   // Calculate the months worked using hardcore math
   // To calculate the months worked
-  var empMonths = moment().diff(moment.unix(empStart, "X"), "months");
-  console.log(empMonths);
+//   var empMonths = moment().diff(moment.unix(empStart, "X"), "months");
+//   console.log(empMonths);
 
   // Calculate the total billed rate
-  var empBilled = empMonths * empRate;
-  console.log(empBilled);
+  var minutesUntilTrainArrive =  0//empMonths * empRate;
+  console.log(minutesUntilTrainArrive);
 
   // Add each train's data into the table
-  $("#employee-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-  empStartPretty + "</td><td>" + empMonths + "</td><td>" + empRate + "</td><td>" + empBilled + "</td></tr>");
+  $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
+    firstTrainDepartTime + "</td><td>" + trainFrequency + "</td><td>" + nextTrainArrive + "</td><td>" + minutesUntilTrainArrive + "</td></tr>");
 });
 
-// Example Time Math
+// Example Time Mathxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 // -----------------------------------------------------------------------------
 // Assume Employee start date of January 1, 2015
 // Assume current date is March 1, 2016
