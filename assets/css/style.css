@@ -1,0 +1,20 @@
+.jumbotron, .panel-title, #add-train-btn {
+    background-color: black;
+    color: wheat;
+
+}
+.panel-primary>.panel-heading {
+    border-color: rgb(0, 0, 0);
+    background-color: black;
+}
+
+.panel-primary {
+    border-color:black;
+}
+.container {
+    width: 90%;
+}
+
+th {
+    font-size: 20px;
+}
