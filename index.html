@@ -49,7 +49,7 @@
                     <th>Destination</th>
                     <th>First Train Departs</th>
                     <th>Frequency</th>
-                    <th>Next Train Arrival Time</th>
+                    <th>Next Train Depart Time</th>
                     <th>Minutes Until Arrival</th>
                   </tr>
                 </thead>
@@ -77,7 +77,7 @@
                   <input class="form-control" id="destination-input" type="text">
                 </div>
                 <div class="form-group">
-                  <label for="firstDepart-input">First Train Time (HH/MM/SS)</label>
+                  <label for="firstDepart-input">First Train Time (HH/MM)</label>
                   <input class="form-control" id="firstDepart-input" type="text">
                 </div>
                 <div class="form-group">
@@ -98,111 +98,124 @@
     </div>
    <!-- JavaScript -->
    <script>
-    /* global firebase moment */
-// Steps to complete:
-
-// 1. Initialize Firebase
-// 2. Create button for adding new employees - then update the html + update the database
-// 3. Create a way to retrieve employees from the employee database.
-// 4. Create a way to calculate the months worked. Using difference between start and current time.
-//    Then use moment.js formatting to set difference in minutes.
-// 5. Calculate time until next train
-// 6. Calculate next train schedule time
-// 8502 Thruway Bus,  28 Empire Builder, 448 Lake Shore Limited, 8 Empire Builder,  
-
-// 1. Initialize Firebase
-var config = {
-    apiKey: "AIzaSyBq3VqIfo8m6XMD8VBLbrT8VltsvTfJziI",
+     
+     
+     // Initialize Firebase
+     var config = {
+       apiKey: "AIzaSyBq3VqIfo8m6XMD8VBLbrT8VltsvTfJziI",
     authDomain: "train-scheduler-e1b0b.firebaseapp.com",
     databaseURL: "https://train-scheduler-e1b0b.firebaseio.com",
     projectId: "train-scheduler-e1b0b",
     storageBucket: "train-scheduler-e1b0b.appspot.com",
     messagingSenderId: "700299089423"
-};
+  };
 
 firebase.initializeApp(config);
 
 var database = firebase.database();
 
-// 2. Button for adding Employees
+// Button for adding new train information
 $("#add-train-btn").on("click", function(event) {
   event.preventDefault();
 
   // Grabs user input
-  var trainName = $("#train-name-input").val().trim();
-  var trainDestination = $("#destination-input").val().trim();
-  var firstTrainDepartTime = moment($("#firstDepart-input").val().trim(), "DD/MM/YY").format("X");
-  var trainFrequency = $("#frequency-input").val().trim();
+   var trainName = $("#train-name-input").val().trim();
+   var trainDestination = $("#destination-input").val().trim();
+  var firstTrainDepartTime = moment($("#firstDepart-input").val().trim(), "HH:mm").format("HH:mm");
+  // var firstTrainDepartTime =  $("#firstDepart-input").format("HH:mm");
+  // var trainFrequency = $("#frequency-input").val().trim();
+  var tFrequency = $("#frequency-input").val().trim();
 
-  // Creates local "temporary" object for holding employee data
+  // Creates local "temporary" object for holding train information
   var newTrain = {
     name: trainName,
     destination: trainDestination,
     firstDepart: firstTrainDepartTime,
-    frequency: trainFrequency
+    frequency: tFrequency
   };
-
-  // Uploads employee data to the database
-  database.ref().push(newTrain);
-
+  console.log(newTrain);
   // Logs everything to console
-  console.log(newTrain.name);
-  console.log(newTrain.destination);
-  console.log(newTrain.firstDepart);
-  console.log(newTrain.frequency);
+  console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  console.log("everything logged to console");
+  console.log("name " + newTrain.name);
+  console.log("destination " + newTrain.destination);
+  console.log("first depart " + newTrain.firstDepart);
+  console.log("frequency " + newTrain.frequency);
+  // console.log("minutes until next " + tMinutesTillTrain);
+  // console.log("next depart " + nextTrain);
 
+
+  database.ref().push(newTrain);
   // Alert
-  alert("Train successfully added");
-
-  // Clears all of the text-boxes
+  alert("Train Information Successfully Added");
+  
+  // Clears  text-boxes
   $("#train-name-input").val("");
   $("#destination-input").val("");
   $("#firstDepart-input").val("");
   $("#frequency-input").val("");
-
+  
 });
 
-// 3. Create Firebase event for adding train info to the database and a row in the html when a user adds an entry
-database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+  
+  database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+    
+    console.log(childSnapshot.val() + " child snapshot");
+    
+    // Store everything into a variable.
+    var trainName = childSnapshot.val().name;
+    console.log("train name " + trainName);
+    var trainDestination = childSnapshot.val().destination;
+    console.log("destination " + trainDestination);
+    var firstTrainDepartTime = childSnapshot.val().firstDepart;
+    console.log("first depart " + firstTrainDepartTime);
+    var tFrequency = childSnapshot.val().frequency;
+    console.log("frequency " + tFrequency);
+    // var newTrain = childSnapshot.val().nextDepart
+    // var tMinutesTillTrain = childSnapshot.val().minutesLeft
+    
+    
+    // console.log("next train " + nextTrain);
+    // console.log("minutes until next train " + tMinutesTillTrain);
+    
 
-  console.log(childSnapshot.val());
+var randomDate = firstTrainDepartTime;
+console.log ("variable randomDate = " + randomDate)
+var randomFormat = "HH:mm";
+var convertedDate = moment(randomDate, randomFormat);
+console.log ("variable convertedDate = " + convertedDate)
 
-  // Store everything into a variable.
-  var trainName = childSnapshot.val().name;
-  var trainDestination = childSnapshot.val().destination;
-  var firstTrainDepartTime = childSnapshot.val().firstDepart;
-  var trainFrequency = childSnapshot.val().frequency;
+// Push train data to the database
+// var tFrequency = newTrain.frequency;
+// var firstTime = newTrain.firstDepart;
+// First Time (pushed back 1 year to make sure it comes before current time)
+var firstTimeConverted = moment(firstTrainDepartTime, "HH:mm").subtract(1, "years");
+console.log(firstTimeConverted);
+// Current Time
+var currentTime = moment();
+console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
+// Difference between the times
+var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+console.log("DIFFERENCE IN TIME: " + diffTime);
+// Time apart (remainder)
+var tRemainder = diffTime % tFrequency;
+console.log(tRemainder);
+// Minutes Until Train
+var tMinutesTillTrain = tFrequency - tRemainder;
+console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+// Next Train
+var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
-  // Employee Info
-  console.log(trainName);
-  console.log(trainDestination);
-  console.log(firstTrainDepartTime);
-  console.log(trainFrequency);
 
-  // Prettify the employee start
-  var nextTrainArrive = moment.unix(firstTrainDepartTime).format("MM/DD/YY");   //fix this
 
-  // Calculate the months worked using hardcore math
-  // To calculate the months worked
-//   var empMonths = moment().diff(moment.unix(empStart, "X"), "months");
-//   console.log(empMonths);
 
-  // Calculate the total billed rate
-  var minutesUntilTrainArrive =  0//empMonths * empRate;
-  console.log(minutesUntilTrainArrive);
-
-  // Add each train's data into the table
+ 
   $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-    firstTrainDepartTime + "</td><td>" + trainFrequency + "</td><td>" + nextTrainArrive + "</td><td>" + minutesUntilTrainArrive + "</td></tr>");
-});
+    firstTrainDepartTime + "</td><td>" + tFrequency + "</td><td>" + nextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
+  });
+  
 
-// Example Time Mathxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// -----------------------------------------------------------------------------
-// Assume Employee start date of January 1, 2015
-// Assume current date is March 1, 2016
-
-// We know that this is 15 months.
-// Now we will create code in moment.js to confirm that any attempt we use mets this test case
    
     </script>
 </body>

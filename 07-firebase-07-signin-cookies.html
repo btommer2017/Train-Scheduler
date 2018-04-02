@@ -91,9 +91,11 @@
         var c = ca[i];
         while (c.charAt(0) === " ") c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) === 0) {
+          console.log("In the substring return thingy.")
           return c.substring(nameEQ.length, c.length);
         }
       }
+      console.log("This is gonna return null :(")
       return null;
     }
 
@@ -108,10 +110,10 @@
       var comment = $("#comment-input").val().trim();
 
       // Console log each of the user inputs to confirm we are receiving them
-      console.log(name);
-      console.log(email);
-      console.log(age);
-      console.log(comment);
+      // console.log(name);
+      // console.log(email);
+      // console.log(age);
+      // console.log(comment);
 
       // Output all of the new information into the relevant sections
       $("#name-display").text(name);
@@ -146,10 +148,10 @@
     });
 
     // By default display the content from the cookieString
-    $("#name-display").text(readCookie("name"));
-    $("#email-display").text(readCookie("email"));
-    $("#age-display").text(readCookie("age"));
-    $("#comment-display").text(readCookie("comment"));
+    // $("#name-display").text(readCookie("name"));
+    // $("#email-display").text(readCookie("email"));
+    // $("#age-display").text(readCookie("age"));
+    // $("#comment-display").text(readCookie("comment"));
   </script>
 
 </body>
